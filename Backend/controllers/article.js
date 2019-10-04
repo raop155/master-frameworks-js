@@ -266,6 +266,60 @@ let controller = {
         }
       );
     }
+  },
+
+  getImage: (req, res) => {
+    var file = req.params.image;
+    var path_file = './upload/articles/' + file;
+
+    fs.exists(path_file, (exists) => {
+      if (exists) {
+        return res.sendFile(path.resolve(path_file));
+
+      } else {
+        return res.status(404).send({
+          status: 'error',
+          message: 'la imagen no existe'
+        });
+      }
+    })
+  },
+
+  search: (req, res) => {
+    // Sacar el string a buscar
+    var searchString = req.params.search;
+
+    // Find or
+    Article.find({
+      "$or": [
+        {
+          "title": {
+            "$regex": searchString, "$options": "i"
+          },
+          "content": {
+            "$regex": searchString, "$options": "i"
+          }
+        }
+      ]
+    }).sort([['date', 'descending']])
+      .exec((err, articles) => {
+
+        if (err || !articles) {
+          return res.status(500).send({
+            status: 'error',
+            message: 'Error en la peticion'
+          });
+        }
+
+        return res.status(200).send({
+          status: 'success',
+          articles
+        });
+      })
+
+
+
+
   }
 };
 
