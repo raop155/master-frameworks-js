@@ -1,13 +1,32 @@
 <template>
-  <div id="slider" class="slider-big">
-    <h1>Bienvenido al Curso de Vue con Víctor Robles de victorroblesweb.es</h1>
-    <a href="#" class="btn-white">Ir al blog</a>
+  <div id="slider" :class="getClasses()">
+    <h1>{{texto}}</h1>
+    <router-link to="/blog" class="btn-white" v-if="home">Ir al Blog</router-link>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Slider'
+  name: "Slider",
+  props: {
+    texto: String,
+    home: Boolean
+  },
+  data() {
+    return {
+      sliderClass: {
+        "slider-big": false,
+        "slider-small": false
+      }
+    };
+  },
+  methods: {
+    getClasses() {
+      if (this.home === true) this.sliderClass["slider-big"] = true;
+      else this.sliderClass["slider-small"] = true;
+      return this.sliderClass;
+    }
+  }
 };
 </script>
 

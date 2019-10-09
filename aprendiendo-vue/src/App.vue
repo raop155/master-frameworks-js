@@ -1,28 +1,19 @@
 <template>
   <div>
-    <HeaderComponent/>
-    <Slider/>
-    <div class="center">
-      <router-view/>
-      <Sidebar/>
-    </div>
-    <FooterComponent/>
+    <HeaderComponent />
+    <router-view />
+    <FooterComponent />
   </div>
 </template>
 
 <script>
-import HeaderComponent from './components/HeaderComponent';
-import Slider from './components/Slider';
-
-import Sidebar from './components/Sidebar';
-import FooterComponent from './components/FooterComponent';
+import HeaderComponent from "./components/HeaderComponent";
+import FooterComponent from "./components/FooterComponent";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     HeaderComponent,
-    Slider,
-    Sidebar,
     FooterComponent
   }
 };
@@ -30,7 +21,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -38,5 +29,5 @@ export default {
   margin-top: 60px;
 }
 
-@import './assets/css/styles.css';
+@import "./assets/css/styles.css";
 </style>
