@@ -8,9 +8,9 @@
     <div id="search" class="sidebar-item">
       <h3>Buscador</h3>
       <p>Encuentra el artículo que buscas</p>
-      <form>
-        <input type="text" name="search">
-        <input type="submit" name="submit" value="Buscar" class="btn">
+      <form @submit.prevent="goSearch">
+        <input type="text" name="search" v-model="searchString" />
+        <input type="submit" name="submit" value="Buscar" class="btn" />
       </form>
     </div>
   </aside>
@@ -18,7 +18,17 @@
 
 <script>
 export default {
-  name: 'Sidebar'
+  name: "Sidebar",
+  data() {
+    return {
+      searchString: null
+    };
+  },
+  methods: {
+    goSearch() {
+      this.$router.push("/redirect/" + this.searchString);
+    }
+  }
 };
 </script>
 

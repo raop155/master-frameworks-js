@@ -4,26 +4,7 @@
     <div class="center">
       <section id="content">
         <h2 class="subheader">Últimos artículos</h2>
-
-        <!--Listado articulos-->
-        <div id="articles">
-          <article class="article-item" id="article-template">
-            <div class="image-wrap">
-              <img
-                src="https://unhabitatmejor.leroymerlin.es/sites/default/files/styles/header_category/public/2018-10/4%20paisaje%20macedonia.jpg?itok=AELknmF8"
-                alt="Paisaje"
-              />
-            </div>
-
-            <h2>Articulo de prueba</h2>
-            <span class="date">Hace 5 minutos</span>
-            <a href="#">Leer más</a>
-
-            <div class="clearfix"></div>
-          </article>
-
-          <!--AÑADIR ARTICULOS VIA JS-->
-        </div>
+        <Articles :articles="articles" />
       </section>
 
       <Sidebar />
@@ -33,14 +14,38 @@
 </template>
 
 <script>
+import Global from "../Global";
+import axios from "axios";
+
 import Slider from "./Slider";
 import Sidebar from "./Sidebar";
+import Articles from "./Articles";
 
 export default {
   name: "LastArticles",
   components: {
     Slider,
-    Sidebar
+    Sidebar,
+    Articles
+  },
+  data() {
+    return {
+      domain: Global.url,
+      articles: []
+    };
+  },
+  mounted() {
+    this.getLastArticles();
+  },
+  methods: {
+    getLastArticles() {
+      axios.get(this.domain + "articles/last").then(res => {
+        if (res.data.status.toUpperCase() == "SUCCESS") {
+          this.articles = res.data.article;
+          console.log(this.articles);
+        }
+      });
+    }
   }
 };
 </script>
