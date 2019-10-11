@@ -129,7 +129,7 @@ let controller = {
 
       // Devolver en json
 
-      return res.status(404).send({
+      return res.status(200).send({
         status: 'success',
         article
       });
@@ -272,17 +272,16 @@ let controller = {
     var file = req.params.image;
     var path_file = './upload/articles/' + file;
 
-    fs.exists(path_file, (exists) => {
+    fs.exists(path_file, exists => {
       if (exists) {
         return res.sendFile(path.resolve(path_file));
-
       } else {
         return res.status(404).send({
           status: 'error',
           message: 'la imagen no existe'
         });
       }
-    })
+    });
   },
 
   search: (req, res) => {
@@ -291,19 +290,21 @@ let controller = {
 
     // Find or
     Article.find({
-      "$or": [
+      $or: [
         {
-          "title": {
-            "$regex": searchString, "$options": "i"
+          title: {
+            $regex: searchString,
+            $options: 'i'
           },
-          "content": {
-            "$regex": searchString, "$options": "i"
+          content: {
+            $regex: searchString,
+            $options: 'i'
           }
         }
       ]
-    }).sort([['date', 'descending']])
+    })
+      .sort([['date', 'descending']])
       .exec((err, articles) => {
-
         if (err || !articles) {
           return res.status(500).send({
             status: 'error',
@@ -315,11 +316,7 @@ let controller = {
           status: 'success',
           articles
         });
-      })
-
-
-
-
+      });
   }
 };
 
