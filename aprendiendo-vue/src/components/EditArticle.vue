@@ -8,7 +8,7 @@ import { required } from "vuelidate/lib/validators";
 import swal from "sweetalert";
 
 export default {
-  name: "CreateArticle",
+  name: "EditArticle",
   components: {
     Sidebar
   },
@@ -17,7 +17,8 @@ export default {
       domain: Global.url,
       file: "",
       article: new Article("", "", null, ""),
-      submitted: false
+      submitted: false,
+      isEdit: true
     };
   },
   validations: {
@@ -31,15 +32,25 @@ export default {
     }
   },
   mounted() {
-    console.log(this.article);
+    var article_id = this.$route.params.id;
+    this.getArticle(article_id);
   },
   methods: {
     fileChange() {
       this.file = this.$refs.file.files[0];
       console.log(this.file);
     },
+    getArticle(article_id) {
+      console.log(this.domain + "article/" + article_id);
+      axios.get(this.domain + "article/" + article_id).then(res => {
+        if (res.data.status.toUpperCase() == "SUCCESS") {
+          this.article = res.data.article;
+        }
+      });
+    },
     save() {
       this.submitted = true;
+      var article_id = this.$route.params.id;
 
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -47,7 +58,7 @@ export default {
       }
 
       axios
-        .post(this.domain + "save", this.article)
+        .put(this.domain + "article/" + article_id, this.article)
         .then(res => {
           if (res.data.status.toUpperCase() == "SUCCESS") {
             if (this.file) {
@@ -62,15 +73,15 @@ export default {
                 .then(res => {
                   if (res.data.article) {
                     swal(
-                      "Articulo creado",
-                      "El articulo ha sido creado correctamente",
+                      "Articulo editado",
+                      "El articulo ha sido editado correctamente",
                       "success"
                     );
 
                     this.article = res.data.article;
-                    this.$router.push("/blog");
+                    this.$router.push("/articulo/" + article_id);
                   } else {
-                    swal("Error", "El articulo no ha sido creado", "error");
+                    swal("Error", "El articulo no ha sido editado", "error");
                   }
 
                   console.log(res);
@@ -80,12 +91,12 @@ export default {
                 });
             } else {
               swal(
-                "Articulo creado",
-                "El articulo ha sido creado correctamente",
+                "Articulo editado",
+                "El articulo ha sido editado correctamente",
                 "success"
               );
               this.article = res.data.article;
-              this.$router.push("/blog");
+              this.$router.push("/articulo/" + article_id);
             }
           }
         })

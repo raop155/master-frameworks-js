@@ -16,6 +16,9 @@
           <span class="date">{{article.date | moment("from", "now")}}</span>
           <p>{{article.content}}</p>
           <div class="clearfix"></div>
+
+          <router-link :to="'/editar/' + article._id" class="btn btn-warning">Editar</router-link>
+          <a @click="deleteArticle(article._id)" class="btn btn-danger">Eliminar</a>
         </article>
       </section>
       <Sidebar />
@@ -26,9 +29,9 @@
 
 <script>
 import Global from "../Global";
-
 import Sidebar from "./Sidebar";
 import axios from "axios";
+import swal from "sweetalert";
 
 export default {
   name: "Article",
@@ -51,6 +54,31 @@ export default {
       axios.get(this.domain + "article/" + article_id).then(res => {
         if (res.data.status.toUpperCase() == "SUCCESS") {
           this.article = res.data.article;
+        }
+      });
+    },
+    deleteArticle(article_id) {
+      swal({
+        title: "Estas seguro?",
+        text: "Una vez eliminado no podras recuperarlo",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+      }).then(willDelete => {
+        if (willDelete) {
+          axios.delete(this.domain + "article/" + article_id).then(res => {
+            if (res) {
+              swal(
+                "Articulo eliminado!",
+                "El articulo ha sido eliminado correctamente",
+                "success"
+              );
+
+              this.$router.push("/blog");
+            }
+          });
+        } else {
+          swal("Uff!! no has borrado nada");
         }
       });
     }
